@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouCan Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo i {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .error-msg,
+        .success-msg {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .error-msg {
+            background: #fee;
+            color: #c00;
+        }
+
+        .success-msg {
+            background: #efe;
+            color: #0a0;
+        }
+
+        .error-msg.show,
+        .success-msg.show {
+            display: block;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .info-box.show {
+            display: block;
+        }
+
+        .info-box i {
+            color: #667eea;
+            margin-left: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .website-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .website-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <h1>YouCan Admin</h1>
+            <p id="pageSubtitle">لوحة التحكم الإدارية</p>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loadingState">
+            <i class="fas fa-spinner"></i>
+            <p>جاري التحقق من النظام...</p>
+        </div>
+
+        <div class="error-msg" id="errorMsg"></div>
+        <div class="success-msg" id="successMsg"></div>
+
+        <!-- First Time Setup (Register) -->
+        <div class="form-container" id="registerForm">
+            <div class="info-box show">
+                <i class="fas fa-info-circle"></i>
+                <strong>إعداد أول:</strong> قم بإنشاء حساب المدير الأول للنظام
+            </div>
+
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">الاسم الكامل *</label>
+                    <input type="text" class="form-input" name="fullName" required placeholder="أحمد محمد">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">اسم المستخدم *</label>
+                    <input type="text" class="form-input" name="username" required minlength="4" placeholder="admin">
+                    <small style="color: #666; font-size: 0.85rem;">على الأقل 4 أحرف</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">البريد الإلكتروني *</label>
+                    <input type="email" class="form-input" name="email" required placeholder="admin@youcan.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">كلمة المرور *</label>
+                    <input type="password" class="form-input" name="password" required minlength="6"
+                        placeholder="••••••">
+                    <small style="color: #666; font-size: 0.85rem;">على الأقل 6 أحرف</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">تأكيد كلمة المرور *</label>
+                    <input type="password" class="form-input" name="confirmPassword" required placeholder="••••••">
+                </div>
+
+                <button type="submit" class="auth-btn" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> إنشاء الحساب وبدء التشغيل
+                </button>
+            </form>
+        </div>
+
+        <!-- Login Form (After Setup) -->
+        <div class="form-container" id="loginForm">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">اسم المستخدم</label>
+                    <input type="text" class="form-input" name="username" required autofocus
+                        placeholder="أدخل اسم المستخدم">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">كلمة المرور</label>
+                    <input type="password" class="form-input" name="password" required placeholder="أدخل كلمة المرور">
+                </div>
+
+                <button type="submit" class="auth-btn" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+            </form>
+        </div>
+
+        <div class="website-link">
+            <a href="index.html">
+                <i class="fas fa-globe"></i>
+                العودة للموقع
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://zyhopxnmysoicjkceboy.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5aG9weG5teXNvaWNqa2NlYm95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzMzQ0NDksImV4cCI6MjA3NTkxMDQ0OX0.CnvXooTiR4nSY683dDdK3DihVSZU6JvGsgDFJ9K_YPo';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        function hideMessages() {
+            document.getElementById('errorMsg').classList.remove('show');
+            document.getElementById('successMsg').classList.remove('show');
+        }
+
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = message;
+            errorMsg.classList.add('show');
+            document.getElementById('successMsg').classList.remove('show');
+        }
+
+        function showSuccess(message) {
+            const successMsg = document.getElementById('successMsg');
+            successMsg.textContent = message;
+            successMsg.classList.add('show');
+            document.getElementById('errorMsg').classList.remove('show');
+        }
+
+        // التحقق من وجود أدمن في النظام
+        async function checkAdminExists() {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('id')
+                    .eq('role', 'admin')
+                    .limit(1);
+
+                if (error) throw error;
+
+                // إخفاء Loading
+                document.getElementById('loadingState').style.display = 'none';
+
+                if (data && data.length > 0) {
+                    // يوجد أدمن - عرض صفحة تسجيل الدخول
+                    document.getElementById('pageSubtitle').textContent = 'تسجيل الدخول';
+                    document.getElementById('loginForm').classList.add('active');
+                } else {
+                    // لا يوجد أدمن - عرض صفحة التسجيل
+                    document.getElementById('pageSubtitle').textContent = 'إعداد النظام للمرة الأولى';
+                    document.getElementById('registerForm').classList.add('active');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loadingState').innerHTML = `
+                    <i class="fas fa-exclamation-triangle" style="color: #dc2626;"></i>
+                    <p style="color: #dc2626;">خطأ في الاتصال بقاعدة البيانات</p>
+                    <button onclick="location.reload()" style="margin-top: 15px; padding: 10px 20px; border: none; background: #667eea; color: white; border-radius: 8px; cursor: pointer;">
+                        إعادة المحاولة
+                    </button>
+                `;
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const btn = document.getElementById('registerBtn');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإنشاء...';
+            hideMessages();
+
+            try {
+                const formData = new FormData(event.target);
+                const fullName = formData.get('fullName');
+                const username = formData.get('username');
+                const email = formData.get('email');
+                const password = formData.get('password');
+                const confirmPassword = formData.get('confirmPassword');
+
+                // التحقق من تطابق كلمتي المرور
+                if (password !== confirmPassword) {
+                    throw new Error('كلمتا المرور غير متطابقتين');
+                }
+
+                // التحقق مرة أخرى من عدم وجود أدمن
+                const { data: existingAdmin } = await supabase
+                    .from('users')
+                    .select('id')
+                    .eq('role', 'admin')
+                    .limit(1);
+
+                if (existingAdmin && existingAdmin.length > 0) {
+                    throw new Error('تم إنشاء حساب المدير مسبقاً');
+                }
+
+                // إنشاء حساب الأدمن
+                const { error: insertError } = await supabase
+                    .from('users')
+                    .insert([{
+                        username: username,
+                        password: password,
+                        full_name: fullName,
+                        email: email,
+                        role: 'admin',
+                        is_active: true
+                    }]);
+
+                if (insertError) throw insertError;
+
+                showSuccess('✅ تم إنشاء الحساب بنجاح! جاري تسجيل الدخول...');
+
+                // تسجيل دخول تلقائي بعد 2 ثانية
+                setTimeout(() => {
+                    sessionStorage.setItem('adminUser', JSON.stringify({
+                        username: username,
+                        full_name: fullName,
+                        role: 'admin'
+                    }));
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+
+            } catch (error) {
+                showError(error.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب وبدء التشغيل';
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const btn = document.getElementById('loginBtn');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+            hideMessages();
+
+            try {
+                const formData = new FormData(event.target);
+                const username = formData.get('username');
+                const password = formData.get('password');
+
+                // التحقق من بيانات الأدمن
+                const { data: user, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('username', username)
+                    .eq('role', 'admin')
+                    .eq('is_active', true)
+                    .single();
+
+                if (error || !user) {
+                    throw new Error('اسم المستخدم أو كلمة المرور غير صحيحة');
+                }
+
+                if (user.password !== password) {
+                    throw new Error('اسم المستخدم أو كلمة المرور غير صحيحة');
+                }
+
+                // حفظ بيانات الجلسة
+                sessionStorage.setItem('adminUser', JSON.stringify({
+                    id: user.id,
+                    username: user.username,
+                    full_name: user.full_name,
+                    role: user.role
+                }));
+
+                // تحديث آخر تسجيل دخول
+                await supabase
+                    .from('users')
+                    .update({ last_login: new Date().toISOString() })
+                    .eq('id', user.id);
+
+                window.location.href = 'dashboard.html';
+
+            } catch (error) {
+                showError(error.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول';
+            }
+        }
+
+        // التحقق عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            // التحقق من تسجيل الدخول المسبق
+            const adminUser = sessionStorage.getItem('adminUser');
+            if (adminUser) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // التحقق من وجود أدمن في النظام
+            checkAdminExists();
+        });
+    </script>
+</body>
+
+</html>

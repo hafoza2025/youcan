@@ -9,6 +9,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- إضافة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- force desktop-like viewport -->
+<meta name="viewport" content="width=1024, initial-scale=1">
+
+<style>
+  /* إجبار المحتوى على العرض بعرض ديسكتوب ثابت */
+  html, body {
+    min-width: 1024px;    /* غيّر 1024 لأي عرض ديسكتوب تفضله (مثل 1280) */
+    overflow-x: auto;     /* يسمح بالتمرير الأفقي على الموبايل */
+    -webkit-text-size-adjust: 100%; /* منع تكبير الخط التلقائي في بعض المتصفحات */
+    touch-action: manipulation;    /* تحسين بعض التفاعلات اللمسية */
+  }
+
+  /* لو عايز القوائم والأزرار تعمل طبيعي ممكن تضيف قواعد تانية */
+  img, iframe, table {
+    max-width: none; /* منع تقليص الصور/iframes لتتناسب مع الموبايل */
+  }
+</style>
+
     <style>
         * {
             margin: 0;
@@ -2181,5 +2199,6 @@
         })();
     </script>
 </body>
+
 
 </html>

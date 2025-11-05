@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOU CAN - Made in Egypt</title>
+    <title>YOU CAN - Made in Egypt - Premium Sportswear</title>
     <meta name="description" content="Discover premium Egyptian sportswear - exceptional quality meets modern design">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -28,6 +28,10 @@
             --border-color: #E6E6E9;
             --success: #10b981;
             --error: #dc2626;
+        }
+
+        html, body {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -61,6 +65,15 @@
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        header.hide-header {
+            transform: translateY(-100%);
+        }
+
+        header.show-header {
+            transform: translateY(0);
         }
 
         .header-main {
@@ -156,6 +169,14 @@
             justify-content: center;
             font-size: 0.7rem;
             font-weight: 700;
+        }
+
+        .hamburger-menu {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         /* ==================== Category Navigation ==================== */
@@ -421,7 +442,7 @@
             background: var(--dark-gray);
         }
 
-        /* ==================== Modal ==================== */
+        /* ==================== Modal Base ==================== */
         .modal {
             display: none;
             position: fixed;
@@ -477,6 +498,7 @@
             color: var(--white);
         }
 
+        /* ==================== Product Modal ==================== */
         .modal-inner {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -808,8 +830,400 @@
             background: var(--dark-gray);
         }
 
+        /* ==================== Mobile Menu ==================== */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--white);
+            z-index: 2500;
+            transition: left 0.3s;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            left: 0;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu-nav a {
+            padding: 15px 20px;
+            text-decoration: none;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 500;
+        }
+
+        .mobile-menu-nav a:hover {
+            background: var(--off-white);
+        }
+
+        /* ==================== Checkout Modal ==================== */
+        .checkout-container {
+            padding: 40px;
+            max-width: 700px;
+        }
+
+        .checkout-container h2 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+
+        .checkout-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .checkout-section {
+            padding: 20px;
+            background: var(--off-white);
+            border-radius: 8px;
+        }
+
+        .checkout-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--black);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--black);
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-option:hover {
+            border-color: var(--black);
+        }
+
+        .payment-option input {
+            width: auto;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .payment-option span {
+            font-weight: 500;
+        }
+
+        .order-summary {
+            background: var(--white);
+            border: 2px solid var(--border-color);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .summary-row.total {
+            border-top: 2px solid var(--border-color);
+            padding-top: 10px;
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .submit-order-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-order-btn:hover {
+            background: var(--dark-gray);
+        }
+
+        /* ==================== Advanced Size Calculator ==================== */
+        .size-calculator-content {
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        .size-calculator-content h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .calculator-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .calculator-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calculate-btn:hover {
+            background: var(--dark-gray);
+        }
+
+        .size-recommendation {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-left: 4px solid var(--success);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .recommendation-content i {
+            font-size: 2rem;
+            color: var(--success);
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .recommendation-content h3 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .recommended-size-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 15px;
+        }
+
+        .apply-size-btn {
+            padding: 10px 20px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .apply-size-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* ==================== Footer ==================== */
+        .footer {
+            background: var(--black);
+            color: var(--white);
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-col h3,
+        .footer-col h4 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--white);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--white);
+            color: var(--black);
+            transform: translateY(-3px);
+        }
+
+        .footer-contact {
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .footer-contact p {
+            margin-bottom: 8px;
+        }
+
+        .footer-contact i {
+            margin-right: 8px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .footer-bottom {
+            background: rgba(0,0,0,0.5);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+        }
+
         /* ==================== Responsive ==================== */
+        @media (max-width: 1024px) {
+            .header-search {
+                max-width: 300px;
+                margin: 0 20px;
+            }
+        }
+
         @media (max-width: 768px) {
+            .hamburger-menu {
+                display: block;
+            }
+
+            .header-search {
+                display: none;
+            }
+
+            .header-main {
+                padding: 10px 5%;
+            }
+
+            .category-nav {
+                display: none;
+            }
+
+            .category-nav.mobile-nav {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
             .modal-inner {
                 grid-template-columns: 1fr;
                 gap: 20px;
@@ -826,16 +1240,40 @@
                 right: -100%;
             }
 
+            .checkout-container {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .size-calculator-content {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 1.5rem;
+                letter-spacing: 2px;
+            }
+
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 1.8rem;
             }
 
-            .header-search {
-                display: none;
+            .section-title {
+                font-size: 1.8rem;
             }
 
-            .header-main {
-                padding: 10px 5%;
+            .products-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -867,6 +1305,9 @@
                 </button>
                 <button class="icon-btn">
                     <i class="fas fa-user"></i>
+                </button>
+                <button class="hamburger-menu" id="hamburgerBtn" onclick="openMobileMenu()">
+                    <i class="fas fa-bars"></i>
                 </button>
             </div>
         </div>
@@ -921,7 +1362,6 @@
 
         <div class="products-grid" id="productsGrid"></div>
     </section>
-
     <!-- Product Modal -->
     <div class="modal" id="productModal">
         <div class="modal-overlay" onclick="closeProductModal()"></div>
@@ -943,8 +1383,8 @@
                     <div class="modal-section">
                         <h4>Sizes</h4>
                         <div class="sizes-container" id="sizesContainer"></div>
-                        <button class="size-guide-btn" onclick="openSizeCalculator()">
-                            <i class="fas fa-ruler"></i> Size Guide
+                        <button class="size-guide-btn" onclick="openAdvancedSizeCalculator()">
+                            <i class="fas fa-ruler"></i> Size Calculator
                         </button>
                     </div>
 
@@ -1058,6 +1498,172 @@
         </div>
     </div>
 
+    <!-- Advanced Size Calculator Modal -->
+    <div class="modal" id="advancedSizeCalculatorModal">
+        <div class="modal-overlay" onclick="closeAdvancedSizeCalculator()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeAdvancedSizeCalculator()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="size-calculator-content">
+                <h2>Size Calculator</h2>
+                <p class="calculator-subtitle">Find your perfect size based on your measurements</p>
+
+                <form id="sizeCalculatorForm">
+                    <div class="calculator-inputs">
+                        <div class="form-group">
+                            <label>Height (cm) *</label>
+                            <input type="number" name="height" min="100" max="250" placeholder="e.g., 170" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Weight (kg) *</label>
+                            <input type="number" name="weight" min="30" max="200" placeholder="e.g., 70" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Chest/Bust (cm) *</label>
+                            <input type="number" name="chest" min="60" max="140" placeholder="e.g., 95" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Waist (cm)</label>
+                            <input type="number" name="waist" min="50" max="130" placeholder="e.g., 85">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Preferred Fit *</label>
+                            <select name="fit" required>
+                                <option value="">Select Fit</option>
+                                <option value="slim">Slim Fit</option>
+                                <option value="regular">Regular Fit</option>
+                                <option value="relaxed">Relaxed Fit</option>
+                                <option value="oversized">Oversized</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="button" class="calculate-btn" onclick="calculateSize()">
+                        <i class="fas fa-calculator"></i> Calculate My Size
+                    </button>
+
+                    <div id="sizeRecommendation" class="size-recommendation" style="display: none;">
+                        <div class="recommendation-content">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Recommended Size</h3>
+                            <p id="recommendedSize" class="recommended-size-text"></p>
+                            <button type="button" class="apply-size-btn" onclick="applySizeToModal()">
+                                Apply This Size
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-overlay" onclick="closeCheckout()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCheckout()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="checkout-container">
+                <h2>Checkout</h2>
+                <form id="checkoutForm" onsubmit="submitOrder(event)">
+                    <div class="checkout-sections">
+                        <!-- Contact Information -->
+                        <div class="checkout-section">
+                            <h3>Contact Information</h3>
+                            <div class="form-group">
+                                <label>Full Name *</label>
+                                <input type="text" name="fullName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone *</label>
+                                <input type="tel" name="phone" required>
+                            </div>
+                        </div>
+
+                        <!-- Shipping Address -->
+                        <div class="checkout-section">
+                            <h3>Shipping Address</h3>
+                            <div class="form-group">
+                                <label>Address *</label>
+                                <input type="text" name="address" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>City *</label>
+                                    <input type="text" name="city" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Governorate *</label>
+                                    <select name="governorate" required>
+                                        <option value="">Select Governorate</option>
+                                        <option value="Cairo">Cairo</option>
+                                        <option value="Alexandria">Alexandria</option>
+                                        <option value="Giza">Giza</option>
+                                        <option value="Helwan">Helwan</option>
+                                        <option value="6th October">6th October City</option>
+                                        <option value="New Administrative Capital">New Administrative Capital</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="checkout-section">
+                            <h3>Payment Method</h3>
+                            <div class="payment-options">
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="cash_on_delivery" checked>
+                                    <span>Cash on Delivery</span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="bank_transfer">
+                                    <span>Bank Transfer</span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="online_payment">
+                                    <span>Online Payment</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Order Summary -->
+                        <div class="checkout-section order-summary">
+                            <h3>Order Summary</h3>
+                            <div id="checkoutOrderItems"></div>
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span id="checkoutSubtotal">0 EGP</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping:</span>
+                                <span id="checkoutShipping">0 EGP</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total:</span>
+                                <span id="checkoutTotal">0 EGP</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-order-btn">
+                            <i class="fas fa-check"></i> Place Order
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Cart Sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
@@ -1072,13 +1678,99 @@
                 <span>Total:</span>
                 <span id="cartTotal">0 EGP</span>
             </div>
-            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+            <button class="checkout-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
         </div>
     </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <h2>Menu</h2>
+            <button onclick="closeMobileMenu()" class="mobile-menu-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="mobile-menu-nav">
+            <a href="#" onclick="filterByCategory('all'); closeMobileMenu(); return false;">All Products</a>
+            <a href="#" onclick="filterByCategory('men'); closeMobileMenu(); return false;">Men</a>
+            <a href="#" onclick="filterByCategory('women'); closeMobileMenu(); return false;">Women</a>
+            <a href="#" onclick="filterByCategory('boys'); closeMobileMenu(); return false;">Boys</a>
+            <a href="#" onclick="filterByCategory('girls'); closeMobileMenu(); return false;">Girls</a>
+        </nav>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>YOU CAN</h3>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 10px; font-size: 0.9rem;">
+                    Premium Egyptian sportswear. Made with pride in Egypt.
+                </p>
+                <p style="color: rgba(255,255,255,0.7); margin-top: 15px; font-size: 0.85rem; font-weight: 600;">
+                    Made in Egypt 🇪🇬
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#" onclick="filterByCategory('women'); return false;">Women</a></li>
+                    <li><a href="#" onclick="filterByCategory('men'); return false;">Men</a></li>
+                    <li><a href="#" onclick="filterByCategory('boys'); return false;">Boys</a></li>
+                    <li><a href="#" onclick="filterByCategory('girls'); return false;">Girls</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#" onclick="openSizeCalculator(); return false;">Size Guide</a></li>
+                    <li><a href="#" onclick="alert('Shipping & Returns\\n\\nFree return within 14 days'); return false;">Returns & Exchanges</a></li>
+                    <li><a href="#" onclick="alert('Free delivery on orders over 1300 EGP'); return false;">Shipping Info</a></li>
+                    <li><a href="#" onclick="alert('Contact us via WhatsApp or Email'); return false;">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <div class="social-links">
+                    <a href="https://facebook.com/youcan" target="_blank" class="social-link" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://instagram.com/youcan" target="_blank" class="social-link" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/201234567890" target="_blank" class="social-link" title="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://tiktok.com/@youcan" target="_blank" class="social-link" title="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+
+                <div class="footer-contact" style="margin-top: 20px;">
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 5px;">
+                        <i class="fas fa-phone"></i> +20 123 456 7890
+                    </p>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 5px;">
+                        <i class="fas fa-envelope"></i> info@youcan.com
+                    </p>
+                    <p style="color: rgba(255,255,255,0.7);">
+                        <i class="fas fa-map-marker-alt"></i> Cairo, Egypt
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 YOU CAN. All rights reserved. | Made in Egypt 🇪🇬</p>
+        </div>
+    </footer>
     <script>
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // ==================== Configuration ====================
+       const SUPABASE_URL = 'https://zyhopxnmysoicjkceboy.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5aG9weG5teXNvaWNqa2NlYm95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzMzQ0NDksImV4cCI6MjA3NTkxMDQ0OX0.CnvXooTiR4nSY683dDdK3DihVSZU6JvGsgDFJ9K_YPo';
 
         // ==================== Products Data ====================
         const productsData = [
@@ -1090,7 +1782,7 @@
                 price: 650,
                 colors: [{ name: 'Black', hex: '#000000' }],
                 sizes: ['M', 'L', 'XL', 'XXL'],
-                description: "Stay active and confident in our Men's Essential Movement Shorts, crafted from Premium Milton Fabric for a perfect balance of softness, stretch, and structure.",
+                description: "Stay active and confident in our Men's Essential Movement Shorts, crafted from Premium Milton Fabric.",
                 productDetails: "• Fabric: 77% Cotton + 23% Polyester\n• Soft, breathable, and flexible texture\n• Adjustable drawstring waist for a secure fit\n• Side pockets for convenience\n• Perfect for training or casual wear",
                 fabricCare: "• Machine wash cold (30°C) with similar colors\n• Do not bleach\n• Tumble dry low or hang to dry\n• Iron on low heat if needed\n• Do not dry clean",
                 image_url: 'https://i.pinimg.com/736x/de/b6/a7/deb6a74a6c4417ad537700803fc9883f.jpg',
@@ -1101,13 +1793,10 @@
                 name: "Men's Soft Cotton T-Shirt",
                 category: 'men',
                 price: 450,
-                colors: [
-                    { name: 'Black', hex: '#000000' },
-                    { name: 'White', hex: '#FFFFFF' }
-                ],
+                colors: [{ name: 'Black', hex: '#000000' }, { name: 'White', hex: '#FFFFFF' }],
                 sizes: ['M', 'L', 'XL', 'XXL'],
                 description: "Every Move Says You Can. Lightweight, breathable, and made for everyday comfort.",
-                productDetails: "• Fabric: 100% Egyptian Cotton\n• Fit: Regular\n• Soft-touch, breathable fabric\n• Durable stitching",
+                productDetails: "• Fabric: 100% Egyptian Cotton\n• Fit: Regular\n• Soft-touch, breathable fabric",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild detergent\n• Do not bleach\n• Tumble dry low or hang to air dry",
                 image_url: 'https://i.pinimg.com/736x/de/b6/a7/deb6a74a6c4417ad537700803fc9883f.jpg',
                 tag: 'Best Seller'
@@ -1130,11 +1819,7 @@
                 name: "Boxer",
                 category: 'men',
                 price: 350,
-                colors: [
-                    { name: 'Black', hex: '#000000' },
-                    { name: 'Olive', hex: '#808000' },
-                    { name: 'Navy', hex: '#000080' }
-                ],
+                colors: [{ name: 'Black', hex: '#000000' }, { name: 'Olive', hex: '#808000' }, { name: 'Navy', hex: '#000080' }],
                 sizes: ['M', 'L', 'XL', 'XXL'],
                 description: "Experience everyday comfort with the You Can Cotton Stretch Boxer.",
                 productDetails: "• Fabric: 95% Egyptian Cotton, 5% Elastane\n• Breathable and soft-touch finish\n• Elastic waistband for a secure, comfortable fit",
@@ -1151,7 +1836,7 @@
                 sizes: ['One Size (fits M–XL)'],
                 description: "Every move says You Can — from the ground up.",
                 productDetails: "• Fabric: 80% Cotton / 15% Polyester / 5% Spandex\n• Soft, breathable, and stretchy texture\n• Cushioned sole for added comfort",
-                fabricCare: "• Machine wash warm (max 40°C)\n• Wash with similar colors\n• Do not bleach\n• Do not iron",
+                fabricCare: "• Machine wash warm (max 40°C)\n• Wash with similar colors\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/ff/ff/ff/ffffff.jpg',
                 tag: ''
             },
@@ -1162,10 +1847,7 @@
                 name: "Relaxed Fit Lounge Sweatshirt",
                 category: 'women',
                 price: 580,
-                colors: [
-                    { name: 'White', hex: '#FFFFFF' },
-                    { name: 'Blue', hex: '#0066CC' }
-                ],
+                colors: [{ name: 'White', hex: '#FFFFFF' }, { name: 'Blue', hex: '#0066CC' }],
                 sizes: ['M', 'L', 'XL', 'XXL'],
                 description: "Your go-to layer for effortless comfort — the Relaxed Fit Lounge Sweatshirt.",
                 productDetails: "• Fabric: 77% Cotton / 23% Polyester\n• Oversized silhouette for relaxed comfort\n• Ribbed cuffs and hem for a secure fit\n• Soft brushed lining for a cozy feel",
@@ -1178,13 +1860,10 @@
                 name: "Oversized Long Sleeve Top",
                 category: 'women',
                 price: 520,
-                colors: [
-                    { name: 'Olive', hex: '#808000' },
-                    { name: 'Light Mauve', hex: '#D8BFD8' }
-                ],
+                colors: [{ name: 'Olive', hex: '#808000' }, { name: 'Light Mauve', hex: '#D8BFD8' }],
                 sizes: ['M', 'L', 'XL', 'XXL'],
                 description: "Lightweight, breathable, and made to move — this You Can Oversized Long Sleeve Top.",
-                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Oversized, relaxed fit for easy movement\n• Soft stretch fabric with breathable finish\n• Moisture-wicking and quick-drying",
+                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Oversized, relaxed fit for easy movement\n• Soft stretch fabric with breathable finish",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild or eco-friendly detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/d8/bf/d8/d8bfd8.jpg',
                 tag: 'New'
@@ -1197,7 +1876,7 @@
                 colors: [{ name: 'Dark Sea', hex: '#2F4F4F' }],
                 sizes: ['M', 'L', 'XL', 'XXL'],
                 description: "Stay comfortable and covered in our You Can Oversized Long Sleeve Hoodie.",
-                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Loose, comfy fit with attached hood\n• Smooth, breathable, and quick-dry\n• Stretch design that moves with you",
+                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Loose, comfy fit with attached hood\n• Smooth, breathable, and quick-dry",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild or eco-friendly detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/2f/4f/4f/2f4f4f.jpg',
                 tag: ''
@@ -1207,14 +1886,10 @@
                 name: "Women's Hip Cover",
                 category: 'women',
                 price: 380,
-                colors: [
-                    { name: 'Black', hex: '#000000' },
-                    { name: 'Navy', hex: '#000080' },
-                    { name: 'Brown', hex: '#8B4513' }
-                ],
+                colors: [{ name: 'Black', hex: '#000000' }, { name: 'Navy', hex: '#000080' }, { name: 'Brown', hex: '#8B4513' }],
                 sizes: ['M', 'L', 'XL'],
                 description: "Move confidently with the You Can Women's Hip Cover.",
-                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Stretchy, smooth, and breathable\n• Comfortable wrap design\n• Quick-dry and easy care",
+                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Stretchy, smooth, and breathable\n• Comfortable wrap design",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild or eco-friendly detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/de/b6/a7/deb6a74a6c4417ad537700803fc9883f.jpg',
                 tag: ''
@@ -1224,13 +1899,10 @@
                 name: "Oversized Long Sleeve T-Shirt",
                 category: 'women',
                 price: 480,
-                colors: [
-                    { name: 'Olive', hex: '#808000' },
-                    { name: 'Light Mauve', hex: '#D8BFD8' }
-                ],
+                colors: [{ name: 'Olive', hex: '#808000' }, { name: 'Light Mauve', hex: '#D8BFD8' }],
                 sizes: ['M', 'L', 'XL', 'XXL'],
                 description: "Effortless comfort for every day. The You Can Oversized Long Sleeve T-Shirt.",
-                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Oversized fit for maximum comfort\n• Lightweight and breathable\n• Soft stretch feel",
+                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Oversized fit for maximum comfort\n• Lightweight and breathable",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild or eco-friendly detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/d8/bf/d8/d8bfd8.jpg',
                 tag: ''
@@ -1240,15 +1912,10 @@
                 name: "High-Rise Leggings",
                 category: 'women',
                 price: 650,
-                colors: [
-                    { name: 'Black', hex: '#000000' },
-                    { name: 'Navy', hex: '#000080' },
-                    { name: 'Brown', hex: '#8B4513' },
-                    { name: 'Green', hex: '#008000' }
-                ],
+                colors: [{ name: 'Black', hex: '#000000' }, { name: 'Navy', hex: '#000080' }, { name: 'Brown', hex: '#8B4513' }, { name: 'Green', hex: '#008000' }],
                 sizes: ['M', 'L', 'XL', 'XXL'],
                 description: "Power through every move in You Can High-Rise Leggings.",
-                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• High-rise waist for support and coverage\n• Four-way stretch and squat-proof design\n• Sweat-wicking and quick-drying",
+                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• High-rise waist for support and coverage\n• Four-way stretch and squat-proof design",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild or eco-friendly detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/de/b6/a7/deb6a74a6c4417ad537700803fc9883f.jpg',
                 tag: 'Best Seller'
@@ -1258,15 +1925,10 @@
                 name: "Flared Leggings",
                 category: 'women',
                 price: 680,
-                colors: [
-                    { name: 'Dark Sea', hex: '#2F4F4F' },
-                    { name: 'Navy', hex: '#000080' },
-                    { name: 'Black', hex: '#000000' },
-                    { name: 'Brown', hex: '#8B4513' }
-                ],
+                colors: [{ name: 'Dark Sea', hex: '#2F4F4F' }, { name: 'Navy', hex: '#000080' }, { name: 'Black', hex: '#000000' }, { name: 'Brown', hex: '#8B4513' }],
                 sizes: ['M', 'L', 'XL', 'XXL'],
                 description: "A flattering twist on comfort. The You Can Flared Leggings.",
-                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Soft, stretchy, and breathable\n• Flared cut with high waist\n• Smooth finish and flexible comfort",
+                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Soft, stretchy, and breathable\n• Flared cut with high waist",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild or eco-friendly detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/2f/4f/4f/2f4f4f.jpg',
                 tag: 'New'
@@ -1276,13 +1938,10 @@
                 name: "Sports Bra",
                 category: 'women',
                 price: 420,
-                colors: [
-                    { name: 'Brown', hex: '#8B4513' },
-                    { name: 'Green', hex: '#008000' }
-                ],
+                colors: [{ name: 'Brown', hex: '#8B4513' }, { name: 'Green', hex: '#008000' }],
                 sizes: ['M', 'L', 'XL', 'XXL'],
                 description: "Support that moves with you. The You Can Sports Bra.",
-                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Medium support with stretch comfort\n• Breathable, moisture-wicking, and quick-dry\n• Soft elastic band for secure fit",
+                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Medium support with stretch comfort\n• Breathable, moisture-wicking, and quick-dry",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild or eco-friendly detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/8b/45/13/8b4513.jpg',
                 tag: ''
@@ -1295,8 +1954,8 @@
                 colors: [{ name: 'White', hex: '#FFFFFF' }],
                 sizes: ['One Size (fits M–XL)'],
                 description: "Every move says You Can — from the ground up.",
-                productDetails: "• Fabric: 80% Cotton / 15% Polyester / 5% Spandex\n• Soft, breathable, and stretchy texture\n• Cushioned sole for added comfort\n• Reinforced heel and toe for durability",
-                fabricCare: "• Machine wash warm (max 40°C)\n• Wash with similar colors\n• Do not bleach\n• Do not iron",
+                productDetails: "• Fabric: 80% Cotton / 15% Polyester / 5% Spandex\n• Soft, breathable, and stretchy texture\n• Cushioned sole for added comfort",
+                fabricCare: "• Machine wash warm (max 40°C)\n• Wash with similar colors\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/ff/ff/ff/ffffff.jpg',
                 tag: ''
             },
@@ -1307,13 +1966,10 @@
                 name: "Kids Everyday Active Sweatshirt",
                 category: 'boys',
                 price: 520,
-                colors: [
-                    { name: 'White', hex: '#FFFFFF' },
-                    { name: 'Blue', hex: '#0066CC' }
-                ],
+                colors: [{ name: 'White', hex: '#FFFFFF' }, { name: 'Blue', hex: '#0066CC' }],
                 sizes: ['6Y', '8Y', '10Y', '12Y'],
                 description: "Made for unstoppable kids — the Everyday Active Sweatshirt.",
-                productDetails: "• Fabric: 77% Cotton / 23% Polyester\n• Soft-touch interior for extra comfort\n• Ribbed cuffs and hem to lock in warmth\n• Breathable, durable, and color-holding fabric",
+                productDetails: "• Fabric: 77% Cotton / 23% Polyester\n• Soft-touch interior for extra comfort\n• Ribbed cuffs and hem to lock in warmth",
                 fabricCare: "• Machine wash cold (30°C) with similar colors\n• Do not bleach\n• Tumble dry low or hang to dry",
                 image_url: 'https://i.pinimg.com/736x/ff/ff/ff/ffffff.jpg',
                 tag: ''
@@ -1326,7 +1982,7 @@
                 colors: [{ name: 'Black', hex: '#000000' }],
                 sizes: ['6Y', '8Y', '10Y', '12Y'],
                 description: "Made for play and performance, the Active Motion Shorts.",
-                productDetails: "• Fabric: 77% Cotton / 23% Polyester\n• Smooth and flexible texture\n• Adjustable elastic waistband for a perfect fit\n• Side pockets for essentials",
+                productDetails: "• Fabric: 77% Cotton / 23% Polyester\n• Smooth and flexible texture\n• Adjustable elastic waistband for a perfect fit",
                 fabricCare: "• Machine wash cold (30°C) with similar colors\n• Do not bleach\n• Tumble dry low or hang to dry",
                 image_url: 'https://i.pinimg.com/736x/de/b6/a7/deb6a74a6c4417ad537700803fc9883f.jpg',
                 tag: 'New'
@@ -1336,17 +1992,11 @@
                 name: "Boy's Soft Cotton T-Shirt",
                 category: 'boys',
                 price: 350,
-                colors: [
-                    { name: 'Orange', hex: '#FFA500' },
-                    { name: 'Powder Blue', hex: '#B0E0E6' },
-                    { name: 'Navy', hex: '#000080' },
-                    { name: 'Black', hex: '#000000' },
-                    { name: 'Dark Olive', hex: '#556B2F' }
-                ],
+                colors: [{ name: 'Orange', hex: '#FFA500' }, { name: 'Powder Blue', hex: '#B0E0E6' }, { name: 'Navy', hex: '#000080' }, { name: 'Black', hex: '#000000' }, { name: 'Dark Olive', hex: '#556B2F' }],
                 sizes: ['6Y', '8Y', '10Y', '12Y'],
                 description: "Made for everyday play and comfort, this You Can Boy's Soft Cotton T-Shirt.",
-                productDetails: "• Fabric: 95% Egyptian Cotton, 5% Elastane\n• Fit: Regular\n• Soft, breathable, and flexible material\n• Durable stitching for active wear",
-                fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild detergent\n• Do not bleach\n• Tumble dry low or hang to air dry",
+                productDetails: "• Fabric: 95% Egyptian Cotton, 5% Elastane\n• Fit: Regular\n• Soft, breathable, and flexible material",
+                fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/de/b6/a7/deb6a74a6c4417ad537700803fc9883f.jpg',
                 tag: 'Best Seller'
             },
@@ -1358,7 +2008,7 @@
                 colors: [{ name: 'White', hex: '#FFFFFF' }],
                 sizes: ['One Size (stretch-fit)'],
                 description: "Every move says You Can — from the ground up.",
-                productDetails: "• Fabric: 80% Cotton / 15% Polyester / 5% Spandex\n• Soft, breathable, and stretchy texture\n• Cushioned sole for added comfort\n• Reinforced heel and toe for durability",
+                productDetails: "• Fabric: 80% Cotton / 15% Polyester / 5% Spandex\n• Soft, breathable, and stretchy texture\n• Cushioned sole for added comfort",
                 fabricCare: "• Machine wash warm (max 40°C)\n• Wash with similar colors\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/ff/ff/ff/ffffff.jpg',
                 tag: ''
@@ -1370,13 +2020,10 @@
                 name: "Girl's Tennis Skirt",
                 category: 'girls',
                 price: 480,
-                colors: [
-                    { name: 'Berry', hex: '#C41E3A' },
-                    { name: 'Green', hex: '#008000' }
-                ],
+                colors: [{ name: 'Berry', hex: '#C41E3A' }, { name: 'Green', hex: '#008000' }],
                 sizes: ['6Y', '8Y', '10Y', '12Y'],
                 description: "Serve style and confidence with the You Can Girl's Tennis Skirt.",
-                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Built-in inner shorts\n• Lightweight, breathable, and stretchy\n• Sweat-wicking and quick-drying",
+                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Built-in inner shorts\n• Lightweight, breathable, and stretchy",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild or eco-friendly detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/c4/1e/3a/c41e3a.jpg',
                 tag: 'New'
@@ -1386,13 +2033,10 @@
                 name: "Girl's Leggings",
                 category: 'girls',
                 price: 420,
-                colors: [
-                    { name: 'Berry', hex: '#C41E3A' },
-                    { name: 'Black', hex: '#000000' }
-                ],
+                colors: [{ name: 'Berry', hex: '#C41E3A' }, { name: 'Black', hex: '#000000' }],
                 sizes: ['6Y', '8Y', '10Y', '12Y'],
                 description: "Soft, stretchy, and sustainable — the You Can Girl's Leggings.",
-                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Smooth and flexible fit\n• Lightweight, breathable, and quick-dry\n• Gentle on skin and easy to wash",
+                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Smooth and flexible fit\n• Lightweight, breathable, and quick-dry",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild or eco-friendly detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/c4/1e/3a/c41e3a.jpg',
                 tag: 'Best Seller'
@@ -1405,7 +2049,7 @@
                 colors: [{ name: 'Berry', hex: '#C41E3A' }],
                 sizes: ['6Y', '8Y', '10Y', '12Y'],
                 description: "Comfort meets confidence in the You Can Girl's Crop Top.",
-                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Soft, flexible, and breathable\n• Cropped design with clean finish\n• Retains shape after wash",
+                productDetails: "• Fabric: 80% Recycled Polyester, 20% Recycled Spandex\n• Soft, flexible, and breathable\n• Cropped design with clean finish",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild or eco-friendly detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/c4/1e/3a/c41e3a.jpg',
                 tag: ''
@@ -1418,7 +2062,7 @@
                 colors: [{ name: 'Pink', hex: '#FFC0CB' }],
                 sizes: ['6Y', '8Y', '10Y', '12Y'],
                 description: "A perfect mix of comfort and style — the You Can Girl's Crop Top T-Shirt.",
-                productDetails: "• Fabric: 95% Egyptian Cotton, 5% Elastane\n• Soft stretch fabric for maximum comfort\n• Cropped length with clean, modern finish\n• Lightweight and breathable",
+                productDetails: "• Fabric: 95% Egyptian Cotton, 5% Elastane\n• Soft stretch fabric for maximum comfort\n• Cropped length with clean, modern finish",
                 fabricCare: "• Machine wash cold (max 30°C) with similar colors\n• Use mild detergent\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/ff/c0/cb/ffc0cb.jpg',
                 tag: 'New'
@@ -1431,7 +2075,7 @@
                 colors: [{ name: 'White', hex: '#FFFFFF' }],
                 sizes: ['One Size (stretch-fit)'],
                 description: "Every move says You Can — from the ground up.",
-                productDetails: "• Fabric: 80% Cotton / 15% Polyester / 5% Spandex\n• Soft, breathable, and stretchy texture\n• Cushioned sole for added comfort\n• Reinforced heel and toe for durability",
+                productDetails: "• Fabric: 80% Cotton / 15% Polyester / 5% Spandex\n• Soft, breathable, and stretchy texture\n• Cushioned sole for added comfort",
                 fabricCare: "• Machine wash warm (max 40°C)\n• Wash with similar colors\n• Do not bleach",
                 image_url: 'https://i.pinimg.com/736x/ff/ff/ff/ffffff.jpg',
                 tag: ''
@@ -1443,6 +2087,7 @@
         let currentCategory = 'all';
         let selectedProduct = null;
         let selectedSize = null;
+        let lastScrollTop = 0;
 
         // ==================== Display Products ====================
         function displayProducts(category = 'all') {
@@ -1591,13 +2236,53 @@
             event.target.classList.add('selected');
         }
 
-        // ==================== Size Guide ====================
+        // ==================== Size Calculators ====================
         function openSizeCalculator() {
             document.getElementById('sizeGuideModal').classList.add('active');
         }
 
         function closeSizeCalculator() {
             document.getElementById('sizeGuideModal').classList.remove('active');
+        }
+
+        function openAdvancedSizeCalculator() {
+            document.getElementById('advancedSizeCalculatorModal').classList.add('active');
+        }
+
+        function closeAdvancedSizeCalculator() {
+            document.getElementById('advancedSizeCalculatorModal').classList.remove('active');
+        }
+
+        function calculateSize() {
+            const form = document.getElementById('sizeCalculatorForm');
+            const height = parseInt(form.querySelector('[name="height"]').value);
+            const weight = parseInt(form.querySelector('[name="weight"]').value);
+            const chest = parseInt(form.querySelector('[name="chest"]').value);
+            const fit = form.querySelector('[name="fit"]').value;
+
+            let size = 'M';
+
+            if (chest < 85) {
+                size = fit === 'slim' ? 'XS' : 'S';
+            } else if (chest < 95) {
+                size = fit === 'slim' ? 'S' : 'M';
+            } else if (chest < 105) {
+                size = fit === 'slim' ? 'M' : 'L';
+            } else if (chest < 115) {
+                size = fit === 'slim' ? 'L' : 'XL';
+            } else {
+                size = fit === 'slim' ? 'XL' : 'XXL';
+            }
+
+            document.getElementById('recommendedSize').textContent = size;
+            document.getElementById('sizeRecommendation').style.display = 'block';
+        }
+
+        function applySizeToModal() {
+            const recommendedSize = document.getElementById('recommendedSize').textContent;
+            selectSize(recommendedSize);
+            closeAdvancedSizeCalculator();
+            closeProductModal();
         }
 
         // ==================== Cart Management ====================
@@ -1629,7 +2314,7 @@
 
             updateCart();
             closeProductModal();
-            alert('Added to cart!');
+            alert('✅ Added to cart!');
         }
 
         function updateCart() {
@@ -1691,20 +2376,98 @@
             updateCart();
         }
 
-        function checkout() {
+        function proceedToCheckout() {
             if (cart.length === 0) {
                 alert('Your cart is empty');
                 return;
             }
 
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const cartSummary = cart.map(item =>
-                `${item.name} (${item.size}) x${item.quantity} = ${(item.price * item.quantity).toLocaleString()} EGP`
-            ).join('\n');
-
-            alert(`Proceeding to checkout\n\nTotal: ${total.toLocaleString()} EGP\n\n${cartSummary}`);
-            // In production: window.location.href = 'checkout.html';
+            closeCart();
+            updateCheckoutSummary();
+            document.getElementById('checkoutModal').classList.add('active');
         }
+
+        function updateCheckoutSummary() {
+            const checkoutOrderItems = document.getElementById('checkoutOrderItems');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal > 1300 ? 0 : 100;
+
+            checkoutOrderItems.innerHTML = cart.map(item => `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem;">
+                    <span>${item.name} (${item.size}) × ${item.quantity}</span>
+                    <span>EGP ${(item.price * item.quantity).toLocaleString()}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('checkoutSubtotal').textContent = `${subtotal.toLocaleString()} EGP`;
+            document.getElementById('checkoutShipping').textContent = shipping === 0 ? 'FREE' : `${shipping.toLocaleString()} EGP`;
+            document.getElementById('checkoutTotal').textContent = `${(subtotal + shipping).toLocaleString()} EGP`;
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').classList.remove('active');
+        }
+
+        function submitOrder(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('checkoutForm');
+            const formData = new FormData(form);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal > 1300 ? 0 : 100;
+            const total = subtotal + shipping;
+
+            const orderSummary = `
+            ========== ORDER CONFIRMATION ==========
+            
+            Customer: ${formData.get('fullName')}
+            Phone: ${formData.get('phone')}
+            Email: ${formData.get('email')}
+            
+            Shipping Address:
+            ${formData.get('address')}
+            ${formData.get('city')}, ${formData.get('governorate')}
+            
+            Payment Method: ${formData.get('paymentMethod').replace('_', ' ').toUpperCase()}
+            
+            ========== ORDER ITEMS ==========
+            ${cart.map(item => `${item.name} (${item.size}) × ${item.quantity} = ${(item.price * item.quantity).toLocaleString()} EGP`).join('\n')}
+            
+            Subtotal: ${subtotal.toLocaleString()} EGP
+            Shipping: ${shipping === 0 ? 'FREE' : shipping.toLocaleString() + ' EGP'}
+            TOTAL: ${total.toLocaleString()} EGP
+            
+            ========================================
+            `;
+
+            alert(orderSummary);
+            cart = [];
+            updateCart();
+            closeCheckout();
+            form.reset();
+        }
+
+        // ==================== Mobile Menu ====================
+        function openMobileMenu() {
+            document.getElementById('mobileMenu').classList.add('active');
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('mobileMenu').classList.remove('active');
+        }
+
+        // ==================== Header Hide/Show on Scroll ====================
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (st > lastScrollTop && st > 100) {
+                header.classList.add('hide-header');
+            } else {
+                header.classList.remove('hide-header');
+            }
+            lastScrollTop = st <= 0 ? 0 : st;
+        });
 
         // ==================== Initialize ====================
         window.addEventListener('DOMContentLoaded', () => {

@@ -30,7 +30,8 @@
             --error: #dc2626;
         }
 
-        html, body {
+        html,
+        body {
             scroll-behavior: smooth;
         }
 
@@ -53,8 +54,13 @@
         }
 
         @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
         }
 
         /* ==================== Header ==================== */
@@ -241,6 +247,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -935,7 +942,7 @@
         .form-group select:focus {
             outline: none;
             border-color: var(--black);
-            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
         }
 
         .form-row {
@@ -1130,7 +1137,7 @@
         }
 
         .footer-col ul li a {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: all 0.3s;
             font-size: 0.9rem;
@@ -1149,7 +1156,7 @@
         .social-link {
             width: 40px;
             height: 40px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -1176,15 +1183,15 @@
 
         .footer-contact i {
             margin-right: 8px;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .footer-bottom {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             text-align: center;
             padding: 20px;
             font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
+            color: rgba(255, 255, 255, 0.6);
         }
 
         /* ==================== Responsive ==================== */
@@ -1294,7 +1301,8 @@
             </div>
 
             <div class="header-search">
-                <input type="text" class="search-input" placeholder="Search products..." id="searchInput" oninput="handleSearch(this.value)">
+                <input type="text" class="search-input" placeholder="Search products..." id="searchInput"
+                    oninput="handleSearch(this.value)">
                 <i class="fas fa-search search-icon"></i>
             </div>
 
@@ -1314,7 +1322,8 @@
 
         <div class="category-nav">
             <div class="category-nav-content">
-                <a href="#" class="category-link active" onclick="filterByCategory('all'); return false;">All Products</a>
+                <a href="#" class="category-link active" onclick="filterByCategory('all'); return false;">All
+                    Products</a>
                 <a href="#" class="category-link" onclick="filterByCategory('men'); return false;">Men</a>
                 <a href="#" class="category-link" onclick="filterByCategory('women'); return false;">Women</a>
                 <a href="#" class="category-link" onclick="filterByCategory('boys'); return false;">Boys</a>
@@ -1726,9 +1735,13 @@
                 <h4>Support</h4>
                 <ul>
                     <li><a href="#" onclick="openSizeCalculator(); return false;">Size Guide</a></li>
-                    <li><a href="#" onclick="alert('Shipping & Returns\\n\\nFree return within 14 days'); return false;">Returns & Exchanges</a></li>
-                    <li><a href="#" onclick="alert('Free delivery on orders over 1300 EGP'); return false;">Shipping Info</a></li>
-                    <li><a href="#" onclick="alert('Contact us via WhatsApp or Email'); return false;">Contact Us</a></li>
+                    <li><a href="#"
+                            onclick="alert('Shipping & Returns\\n\\nFree return within 14 days'); return false;">Returns
+                            & Exchanges</a></li>
+                    <li><a href="#" onclick="alert('Free delivery on orders over 1300 EGP'); return false;">Shipping
+                            Info</a></li>
+                    <li><a href="#" onclick="alert('Contact us via WhatsApp or Email'); return false;">Contact Us</a>
+                    </li>
                 </ul>
             </div>
 
@@ -1769,8 +1782,10 @@
     </footer>
     <script>
         // ==================== Configuration ====================
-       const SUPABASE_URL = 'https://zyhopxnmysoicjkceboy.supabase.co';
+        const SUPABASE_URL = 'https://zyhopxnmysoicjkceboy.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5aG9weG5teXNvaWNqa2NlYm95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzMzQ0NDksImV4cCI6MjA3NTkxMDQ0OX0.CnvXooTiR4nSY683dDdK3DihVSZU6JvGsgDFJ9K_YPo';
+        const TELEGRAM_BOT_TOKEN = '7829090712:AAEsWLymxnoQqS7g_FuHGL0mypcLsM7Avsw';
+        const TELEGRAM_CHAT_ID = '8146437115';
 
         // ==================== Products Data ====================
         const productsData = [
@@ -2153,7 +2168,7 @@
             const filtered = productsData.filter(p =>
                 (currentCategory === 'all' || p.category === currentCategory) &&
                 (p.name.toLowerCase().includes(term.toLowerCase()) ||
-                 p.description.toLowerCase().includes(term.toLowerCase()))
+                    p.description.toLowerCase().includes(term.toLowerCase()))
             );
 
             const grid = document.getElementById('productsGrid');
@@ -2410,42 +2425,173 @@
 
         function submitOrder(event) {
             event.preventDefault();
-
             const form = document.getElementById('checkoutForm');
             const formData = new FormData(form);
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const shipping = subtotal > 1300 ? 0 : 100;
             const total = subtotal + shipping;
 
-            const orderSummary = `
-            ========== ORDER CONFIRMATION ==========
-            
-            Customer: ${formData.get('fullName')}
-            Phone: ${formData.get('phone')}
-            Email: ${formData.get('email')}
-            
-            Shipping Address:
-            ${formData.get('address')}
-            ${formData.get('city')}, ${formData.get('governorate')}
-            
-            Payment Method: ${formData.get('paymentMethod').replace('_', ' ').toUpperCase()}
-            
-            ========== ORDER ITEMS ==========
-            ${cart.map(item => `${item.name} (${item.size}) × ${item.quantity} = ${(item.price * item.quantity).toLocaleString()} EGP`).join('\n')}
-            
-            Subtotal: ${subtotal.toLocaleString()} EGP
-            Shipping: ${shipping === 0 ? 'FREE' : shipping.toLocaleString() + ' EGP'}
-            TOTAL: ${total.toLocaleString()} EGP
-            
-            ========================================
-            `;
+            // Generate Order Number
+            const orderNumber = 'ORD-' + Date.now();
 
-            alert(orderSummary);
-            cart = [];
-            updateCart();
-            closeCheckout();
-            form.reset();
+            // Prepare order data
+            const orderData = {
+                order_number: orderNumber,
+                customer_name: formData.get('fullName'),
+                customer_phone: formData.get('phone'),
+                customer_email: formData.get('email'),
+                governorate: formData.get('governorate'),
+                address: formData.get('address'),
+                city: formData.get('city'),
+                payment_method: formData.get('paymentMethod'),
+                items: cart,
+                total: total,
+                subtotal: subtotal,
+                shipping: shipping,
+                status: 'pending',
+                notes: `Payment Method: ${formData.get('paymentMethod')}`
+            };
+
+            // Show loading
+            const btn = event.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            // Save to Supabase
+            saveOrderToSupabase(orderData).then(result => {
+                if (result.success) {
+                    // Send to Telegram
+                    sendToTelegram(orderData);
+
+                    // Show success
+                    const orderSummary = `
+✅ ORDER CONFIRMED!
+
+Order Number: ${orderNumber}
+
+Customer: ${formData.get('fullName')}
+Phone: ${formData.get('phone')}
+Email: ${formData.get('email')}
+
+Address: ${formData.get('address')}
+${formData.get('city')}, ${formData.get('governorate')}
+
+Items:
+${cart.map(item => `• ${item.name} (${item.size}) × ${item.quantity} = ${(item.price * item.quantity).toLocaleString()} EGP`).join('\n')}
+
+Subtotal: ${subtotal.toLocaleString()} EGP
+Shipping: ${shipping === 0 ? 'FREE ✨' : shipping.toLocaleString() + ' EGP'}
+───────────────────────
+TOTAL: ${total.toLocaleString()} EGP
+
+Payment Method: ${formData.get('paymentMethod').replace('_', ' ').toUpperCase()}
+
+Your order has been received! We'll contact you soon.
+`;
+                    alert(orderSummary);
+
+                    // Reset cart and form
+                    cart = [];
+                    updateCart();
+                    closeCheckout();
+                    form.reset();
+                } else {
+                    alert('Error placing order. Please try again.');
+                }
+            }).finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
         }
+
+        // ==================== Supabase Integration ====================
+        async function saveOrderToSupabase(orderData) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({
+                        order_number: orderData.order_number,
+                        customer_name: orderData.customer_name,
+                        customer_phone: orderData.customer_phone,
+                        customer_email: orderData.customer_email,
+                        governorate: orderData.governorate,
+                        address: `${orderData.address}, ${orderData.city}`,
+                        payment_method: orderData.payment_method,
+                        items: orderData.items,
+                        total: orderData.total,
+                        status: 'pending',
+                        notes: orderData.notes
+                    })
+                });
+
+                if (response.ok) {
+                    return { success: true };
+                } else {
+                    console.error('Supabase error:', response.statusText);
+                    return { success: false };
+                }
+            } catch (error) {
+                console.error('Error saving to Supabase:', error);
+                return { success: false };
+            }
+        }
+
+        // ==================== Telegram Integration ====================
+        function sendToTelegram(orderData) {
+            const message = `
+📦 NEW ORDER RECEIVED!
+
+📍 Order #: ${orderData.order_number}
+
+👤 Customer: ${orderData.customer_name}
+📱 Phone: ${orderData.customer_phone}
+📧 Email: ${orderData.customer_email || 'N/A'}
+
+📮 Delivery Address:
+${orderData.address}
+${orderData.city}, ${orderData.governorate}
+
+🛍️ Items:
+${orderData.items.map(item => `• ${item.name} (${item.size}) × ${item.quantity} = ${(item.price * item.quantity).toLocaleString()} EGP`).join('\n')}
+
+💰 Payment Summary:
+Subtotal: ${orderData.subtotal.toLocaleString()} EGP
+Shipping: ${orderData.shipping === 0 ? 'FREE ✨' : orderData.shipping.toLocaleString() + ' EGP'}
+═══════════════════════
+TOTAL: ${orderData.total.toLocaleString()} EGP
+
+💳 Payment Method: ${orderData.payment_method.replace('_', ' ').toUpperCase()}
+⏰ Time: ${new Date().toLocaleString('en-US')}
+⚠️ Status: ${orderData.status}
+`;
+
+            const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+            fetch(telegramUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            }).then(response => {
+                if (response.ok) {
+                    console.log('✅ Telegram notification sent');
+                }
+            }).catch(error => {
+                console.error('Error sending to Telegram:', error);
+            });
+        }
+
 
         // ==================== Mobile Menu ====================
         function openMobileMenu() {
@@ -2478,4 +2624,3 @@
 </body>
 
 </html>
-

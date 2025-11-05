@@ -313,43 +313,43 @@
             letter-spacing: -1px;
         }
 
+               /* ==================== Category Cards ==================== */
         .category-cards {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 50px;
             overflow-x: auto;
-            padding: 10px 0;
+            padding: 15px 0;
             justify-content: center;
             flex-wrap: wrap;
         }
 
-        .category-card {
-            padding: 15px 25px;
+        .category-button {
+            padding: 10px 20px;
             background: var(--off-white);
-            border: 2px solid var(--border-color);
+            border: 1px solid var(--border-color);
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
-            border-radius: 8px;
-            min-width: 120px;
+            border-radius: 6px;
+            min-width: auto;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--text-primary);
         }
 
-        .category-card:hover,
-        .category-card.active {
+        .category-button:hover {
             background: var(--black);
             color: var(--white);
             border-color: var(--black);
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
 
-        .category-card-icon {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-        }
-
-        .category-card-name {
-            font-weight: 600;
-            font-size: 0.9rem;
+        .category-button.active {
+            background: var(--black);
+            color: var(--white);
+            border-color: var(--black);
         }
 
         .products-grid {
@@ -1320,11 +1320,11 @@
 
         <div class="category-nav">
             <div class="category-nav-content">
-                <a href="#" class="category-link active" onclick="filterByCategory('all'); return false;">All
+                <a href="#" class="category-link active" onclick="('all'); return false;">All
                     Products</a>
-                <a href="#" class="category-link" onclick="filterByCategory('men'); return false;">Men</a>
-                <a href="#" class="category-link" onclick="filterByCategory('women'); return false;">Women</a>
-                <a href="#" class="category-link" onclick="filterByCategory('boys'); return false;">Boys</a>
+                <a href="#" class="category-link" onclick="('men'); return false;">Men</a>
+                <a href="#" class="category-link" onclick="('women'); return false;">Women</a>
+                <a href="#" class="category-link" onclick="('boys'); return false;">Boys</a>
                 <a href="#" class="category-link" onclick="filterByCategory('girls'); return false;">Girls</a>
             </div>
         </div>
@@ -1344,27 +1344,12 @@
     <section id="products" class="products-section">
         <h2 class="section-title" id="sectionTitle">Our Collections</h2>
 
-        <div class="category-cards">
-            <div class="category-card active" onclick="filterByCategory('all')">
-                <div class="category-card-icon">🏷️</div>
-                <div class="category-card-name">All (23)</div>
-            </div>
-            <div class="category-card" onclick="filterByCategory('men')">
-                <div class="category-card-icon">👕</div>
-                <div class="category-card-name">Men (5)</div>
-            </div>
-            <div class="category-card" onclick="filterByCategory('women')">
-                <div class="category-card-icon">👗</div>
-                <div class="category-card-name">Women (9)</div>
-            </div>
-            <div class="category-card" onclick="filterByCategory('boys')">
-                
-                <div class="category-card-name">Boys (4)</div>
-            </div>
-            <div class="category-card" onclick="filterByCategory('girls')">
-                <div class="category-card-icon">👧</div>
-                <div class="category-card-name">Girls (5)</div>
-            </div>
+               <div class="category-cards">
+            <button class="category-button active" onclick="filterByCategory('all')">All (23)</button>
+            <button class="category-button" onclick="filterByCategory('men')">Men (5)</button>
+            <button class="category-button" onclick="filterByCategory('women')">Women (9)</button>
+            <button class="category-button" onclick="filterByCategory('boys')">Boys (4)</button>
+            <button class="category-button" onclick="filterByCategory('girls')">Girls (5)</button>
         </div>
 
         <div class="products-grid" id="productsGrid"></div>
@@ -2136,12 +2121,14 @@
         }
 
         // ==================== Filter & Search ====================
-        function filterByCategory(category) {
+              function filterByCategory(category) {
             currentCategory = category;
 
-            document.querySelectorAll('.category-card').forEach(card => card.classList.remove('active'));
-            event.target.closest('.category-card')?.classList.add('active');
+            // Update button styles
+            document.querySelectorAll('.category-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
 
+            // Update category nav links
             document.querySelectorAll('.category-link').forEach(link => link.classList.remove('active'));
             event.target.closest('.category-link')?.classList.add('active');
 
@@ -2622,6 +2609,7 @@ TOTAL: ${orderData.total.toLocaleString()} EGP
 </body>
 
 </html>
+
 
 
 

@@ -2509,174 +2509,191 @@
             document.getElementById('checkoutModal').classList.remove('active');
         }
 
-        function submitOrder(event) {
-            event.preventDefault();
-            const form = document.getElementById('checkoutForm');
-            const formData = new FormData(form);
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const shipping = subtotal > 1300 ? 0 : 100;
-            const total = subtotal + shipping;
+async function submitOrder(event) {
+    event.preventDefault();
+    const form = document.getElementById('checkoutForm');
+    const formData = new FormData(form);
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const shipping = subtotal > 1300 ? 0 : 100;
+    const total = subtotal + shipping;
 
-            // Generate Order Number
-            const orderNumber = 'ORD-' + Date.now();
+    // Generate Order Number
+    const orderNumber = 'ORD-' + Date.now();
+    
+    // Prepare order data
+    const orderData = {
+        order_number: orderNumber,
+        customer_name: formData.get('fullName'),
+        customer_phone: formData.get('phone'),
+        customer_email: formData.get('email'),
+        governorate: formData.get('governorate'),
+        address: formData.get('address'),
+        city: formData.get('city'),
+        payment_method: formData.get('paymentMethod'),
+        items: cart,
+        total: total,
+        subtotal: subtotal,
+        shipping: shipping,
+        status: 'pending',
+        notes: `Payment Method: ${formData.get('paymentMethod')}`
+    };
 
-            // Prepare order data
-            const orderData = {
-                order_number: orderNumber,
-                customer_name: formData.get('fullName'),
-                customer_phone: formData.get('phone'),
-                customer_email: formData.get('email'),
-                governorate: formData.get('governorate'),
-                address: formData.get('address'),
-                city: formData.get('city'),
-                payment_method: formData.get('paymentMethod'),
-                items: cart,
-                total: total,
-                subtotal: subtotal,
-                shipping: shipping,
-                status: 'pending',
-                notes: `Payment Method: ${formData.get('paymentMethod')}`
-            };
+    // Show loading
+    const btn = event.target.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
-            // Show loading
-            const btn = event.target.querySelector('button[type="submit"]');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    try {
+        // 1. Send to Telegram (الأولوية)
+        await sendToTelegram(orderData);
+        
+        // 2. Try to save to Supabase (اختياري)
+        await saveOrderToSupabase(orderData);
 
-            // Save to Supabase
-            saveOrderToSupabase(orderData).then(result => {
-                if (result.success) {
-                    // Send to Telegram
-                    sendToTelegram(orderData);
-
-                    // Show success
-                    const orderSummary = `
+        // Show success message
+        const orderSummary = `
 ✅ ORDER CONFIRMED!
 
 Order Number: ${orderNumber}
 
-Customer: ${formData.get('fullName')}
-Phone: ${formData.get('phone')}
-Email: ${formData.get('email')}
+👤 Customer: ${formData.get('fullName')}
+📱 Phone: ${formData.get('phone')}
+📧 Email: ${formData.get('email')}
 
-Address: ${formData.get('address')}
+📮 Address:
+${formData.get('address')}
 ${formData.get('city')}, ${formData.get('governorate')}
 
-Items:
+🛍️ Items:
 ${cart.map(item => `• ${item.name} (${item.size}) × ${item.quantity} = ${(item.price * item.quantity).toLocaleString()} EGP`).join('\n')}
 
+💰 Summary:
 Subtotal: ${subtotal.toLocaleString()} EGP
 Shipping: ${shipping === 0 ? 'FREE ✨' : shipping.toLocaleString() + ' EGP'}
 ───────────────────────
 TOTAL: ${total.toLocaleString()} EGP
 
-Payment Method: ${formData.get('paymentMethod').replace('_', ' ').toUpperCase()}
+💳 Payment: ${formData.get('paymentMethod').replace('_', ' ').toUpperCase()}
 
-Your order has been received! We'll contact you soon.
-`;
-                    alert(orderSummary);
+✅ Your order has been received!
+We'll contact you soon via WhatsApp/Phone.
+        `;
+        
+        alert(orderSummary);
+        
+        // Reset everything
+        cart = [];
+        updateCart();
+        closeCheckout();
+        form.reset();
+        
+    } catch (error) {
+        console.error('Order submission error:', error);
+        alert('⚠️ There was an issue processing your order. Please try again or contact us directly.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
 
-                    // Reset cart and form
-                    cart = [];
-                    updateCart();
-                    closeCheckout();
-                    form.reset();
-                } else {
-                    alert('Error placing order. Please try again.');
-                }
-            }).finally(() => {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            });
+// ==================== Supabase Integration ====================
+async function saveOrderToSupabase(orderData) {
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+                order_number: orderData.order_number,
+                customer_name: orderData.customer_name,
+                customer_phone: orderData.customer_phone,
+                customer_email: orderData.customer_email,
+                governorate: orderData.governorate,
+                address: `${orderData.address}, ${orderData.city}`,
+                payment_method: orderData.payment_method,
+                items: orderData.items,
+                total: orderData.total,
+                status: 'pending',
+                notes: orderData.notes
+            })
+        });
+
+        if (response.ok) {
+            console.log('✅ Order saved to Supabase');
+            return { success: true };
+        } else {
+            console.warn('⚠️ Supabase error:', response.statusText);
+            return { success: false };
         }
+    } catch (error) {
+        console.warn('⚠️ Supabase unavailable:', error.message);
+        return { success: false };
+    }
+}
 
-        // ==================== Supabase Integration ====================
-        async function saveOrderToSupabase(orderData) {
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    },
-                    body: JSON.stringify({
-                        order_number: orderData.order_number,
-                        customer_name: orderData.customer_name,
-                        customer_phone: orderData.customer_phone,
-                        customer_email: orderData.customer_email,
-                        governorate: orderData.governorate,
-                        address: `${orderData.address}, ${orderData.city}`,
-                        payment_method: orderData.payment_method,
-                        items: orderData.items,
-                        total: orderData.total,
-                        status: 'pending',
-                        notes: orderData.notes
-                    })
-                });
+// ==================== Telegram Integration ====================
+async function sendToTelegram(orderData) {
+    const message = `
+🎉 <b>NEW ORDER RECEIVED!</b>
 
-                if (response.ok) {
-                    return { success: true };
-                } else {
-                    console.error('Supabase error:', response.statusText);
-                    return { success: false };
-                }
-            } catch (error) {
-                console.error('Error saving to Supabase:', error);
-                return { success: false };
-            }
-        }
+📍 <b>Order #:</b> <code>${orderData.order_number}</code>
 
-        // ==================== Telegram Integration ====================
-        function sendToTelegram(orderData) {
-            const message = `
-📦 NEW ORDER RECEIVED!
+👤 <b>Customer:</b> ${orderData.customer_name}
+📱 <b>Phone:</b> <a href="tel:${orderData.customer_phone}">${orderData.customer_phone}</a>
+📧 <b>Email:</b> ${orderData.customer_email || 'N/A'}
 
-📍 Order #: ${orderData.order_number}
-
-👤 Customer: ${orderData.customer_name}
-📱 Phone: ${orderData.customer_phone}
-📧 Email: ${orderData.customer_email || 'N/A'}
-
-📮 Delivery Address:
+📮 <b>Delivery Address:</b>
 ${orderData.address}
 ${orderData.city}, ${orderData.governorate}
 
-🛍️ Items:
-${orderData.items.map(item => `• ${item.name} (${item.size}) × ${item.quantity} = ${(item.price * item.quantity).toLocaleString()} EGP`).join('\n')}
+🛍️ <b>Items:</b>
+${orderData.items.map(item => `• ${item.name} (${item.size}) × ${item.quantity} = <b>${(item.price * item.quantity).toLocaleString()} EGP</b>`).join('\n')}
 
-💰 Payment Summary:
+💰 <b>Payment Summary:</b>
 Subtotal: ${orderData.subtotal.toLocaleString()} EGP
-Shipping: ${orderData.shipping === 0 ? 'FREE ✨' : orderData.shipping.toLocaleString() + ' EGP'}
+Shipping: ${orderData.shipping === 0 ? '<b>FREE ✨</b>' : orderData.shipping.toLocaleString() + ' EGP'}
 ═══════════════════════
-TOTAL: ${orderData.total.toLocaleString()} EGP
+<b>TOTAL: ${orderData.total.toLocaleString()} EGP</b>
 
-💳 Payment Method: ${orderData.payment_method.replace('_', ' ').toUpperCase()}
-⏰ Time: ${new Date().toLocaleString('en-US')}
-⚠️ Status: ${orderData.status}
-`;
+💳 <b>Payment:</b> ${orderData.payment_method.replace('_', ' ').toUpperCase()}
+⏰ <b>Time:</b> ${new Date().toLocaleString('en-US', { timeZone: 'Africa/Cairo' })}
+⚠️ <b>Status:</b> ${orderData.status}
 
-            const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+━━━━━━━━━━━━━━━━━━━━
+🇪🇬 Made in Egypt | YOU CAN
+    `;
 
-            fetch(telegramUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: message,
-                    parse_mode: 'HTML'
-                })
-            }).then(response => {
-                if (response.ok) {
-                    console.log('✅ Telegram notification sent');
-                }
-            }).catch(error => {
-                console.error('Error sending to Telegram:', error);
-            });
+    const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    
+    try {
+        const response = await fetch(telegramUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        });
+
+        if (response.ok) {
+            console.log('✅ Telegram notification sent successfully');
+            return { success: true };
+        } else {
+            throw new Error('Telegram API error: ' + response.statusText);
         }
+    } catch (error) {
+        console.error('❌ Error sending to Telegram:', error);
+        throw error; // This will trigger the catch in submitOrder
+    }
+}
 
 
         // ==================== Mobile Menu ====================
@@ -2710,6 +2727,7 @@ TOTAL: ${orderData.total.toLocaleString()} EGP
 </body>
 
 </html>
+
 
 
 

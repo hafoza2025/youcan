@@ -1,0 +1,21 @@
+{
+  "name": "YOU CAN - Made in Egypt",
+  "short_name": "YOU CAN",
+  "description": "Premium Egyptian Sportswear",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "https://i.pinimg.com/736x/4a/9f/b3/4a9fb39e9acb939f0584cc340df0baaf.jpg",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.pinimg.com/736x/4a/9f/b3/4a9fb39e9acb939f0584cc340df0baaf.jpg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

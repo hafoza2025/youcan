@@ -987,54 +987,55 @@ try {
 
     <script> /**
 /**
- * 🔌 دالة الربط الضريبي الشاملة (MetaConnect)
- * ضع هذه الدالة في نهاية ملف Javascript أو داخل وسم <script>
+ * دالة الربط مع MetaConnect
+ * يرجى عدم تعديل الرابط أو المعرف
  */
+// معرفك الضريبي
+const taxId = "312345678900003";
+
 async function sendInvoiceToTax(totalAmount, itemsList, isLive = false) {
-    // 1. تحديد البيئة (Sandbox أو Live)
     const env = isLive ? 'connect' : 'sandbox';
-    const url = `https://metaconnect-server-three.vercel.app/api/v1/${env}/${taxId}`; // تم استخدام المتغيرات الصحيحة
+    const url = `https://metaconnect-server-three.vercel.app/api/v1/${env}/${taxId}`;
 
-    console.log(`📡 جاري الإرسال إلى بيئة: ${isLive ? 'Live 🚀' : 'Sandbox 🧪'}`);
-
-    // 2. تجهيز البيانات
     const payload = {
         total: totalAmount,
         date: new Date().toISOString().split('T')[0],
-        items: itemsList.map(item => ({ name: item.name, price: item.price, qty: item.quantity || 1 }))
+        items: itemsList.map(item => ({ 
+            name: item.name, 
+            price: item.price, 
+            qty: item.quantity || 1 
+        }))
     };
 
+    console.log("📡 Connecting to:", url);
+
     try {
-        // 3. الإرسال
         const res = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         });
-
+        
         const data = await res.json();
-
-        // 4. النتيجة
+        
         if (res.ok) {
-            console.log("✅ تم الربط بنجاح:", data);
-            alert("تم توثيق الفاتورة ضريبياً بنجاح! ✅");
+            console.log("✅ Success:", data);
+            alert("تم التوثيق الضريبي بنجاح!");
+            return true;
         } else {
-            console.error("❌ خطأ:", data);
-            alert("فشل التوثيق: " + (data.message || "خطأ غير معروف"));
+            console.error("❌ Error:", data);
+            alert("فشل التوثيق: " + data.message);
+            return false;
         }
     } catch (err) {
-        console.error("⚠️ خطأ اتصال:", err);
-        alert("فشل الاتصال بالسيرفر. تأكد من الإنترنت.");
+        console.error("⚠️ Connection Error:", err);
+        return false;
     }
-}
-
-// ==========================================
-// 🟢 مثال للاستخدام (ضعه داخل زر الحفظ):
-// sendInvoiceToTax(150.00, cartItems, false); // false للتجربة
-// ========================================== </script>
+} </script>
 </body>
 
 
 </html>
+
 
 

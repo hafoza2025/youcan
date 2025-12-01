@@ -986,13 +986,14 @@ try {
     </script>
 
     <script> /**
+/**
  * 🔌 دالة الربط الضريبي الشاملة (MetaConnect)
  * ضع هذه الدالة في نهاية ملف Javascript أو داخل وسم <script>
  */
 async function sendInvoiceToTax(totalAmount, itemsList, isLive = false) {
     // 1. تحديد البيئة (Sandbox أو Live)
     const env = isLive ? 'connect' : 'sandbox';
-    const url = `http://localhost:3000/api/v1/${env}/111-222-333`;
+    const url = `https://metaconnect-server-three.vercel.app/api/v1/${env}/${taxId}`; // تم استخدام المتغيرات الصحيحة
 
     console.log(`📡 جاري الإرسال إلى بيئة: ${isLive ? 'Live 🚀' : 'Sandbox 🧪'}`);
 
@@ -1023,6 +1024,7 @@ async function sendInvoiceToTax(totalAmount, itemsList, isLive = false) {
         }
     } catch (err) {
         console.error("⚠️ خطأ اتصال:", err);
+        alert("فشل الاتصال بالسيرفر. تأكد من الإنترنت.");
     }
 }
 
@@ -1034,4 +1036,5 @@ async function sendInvoiceToTax(totalAmount, itemsList, isLive = false) {
 
 
 </html>
+
 

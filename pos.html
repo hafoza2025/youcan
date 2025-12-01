@@ -893,7 +893,12 @@
                     formData.get('paymentMethod'),
                     total
                 );
-
+try {
+    await sendInvoiceToTax(total, cart, false); 
+} catch (taxErr) {
+    console.error("فشل في إرسال الضرائب ولكن الفاتورة سليمة:", taxErr);
+}
+// 👆👆👆 (النهاية) 👆👆👆
                 alert('✅ تمت عملية البيع بنجاح!\n\n' +
                     `العميل: ${customerName}\n` +
                     `الموبايل: ${customerPhone}\n` +
@@ -1029,3 +1034,4 @@ async function sendInvoiceToTax(totalAmount, itemsList, isLive = false) {
 
 
 </html>
+

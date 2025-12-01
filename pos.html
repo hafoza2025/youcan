@@ -979,6 +979,53 @@
         }
 
     </script>
+
+    <script> /**
+ * 🔌 دالة الربط الضريبي الشاملة (MetaConnect)
+ * ضع هذه الدالة في نهاية ملف Javascript أو داخل وسم <script>
+ */
+async function sendInvoiceToTax(totalAmount, itemsList, isLive = false) {
+    // 1. تحديد البيئة (Sandbox أو Live)
+    const env = isLive ? 'connect' : 'sandbox';
+    const url = `http://localhost:3000/api/v1/${env}/111-222-333`;
+
+    console.log(`📡 جاري الإرسال إلى بيئة: ${isLive ? 'Live 🚀' : 'Sandbox 🧪'}`);
+
+    // 2. تجهيز البيانات
+    const payload = {
+        total: totalAmount,
+        date: new Date().toISOString().split('T')[0],
+        items: itemsList.map(item => ({ name: item.name, price: item.price, qty: item.quantity || 1 }))
+    };
+
+    try {
+        // 3. الإرسال
+        const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        // 4. النتيجة
+        if (res.ok) {
+            console.log("✅ تم الربط بنجاح:", data);
+            alert("تم توثيق الفاتورة ضريبياً بنجاح! ✅");
+        } else {
+            console.error("❌ خطأ:", data);
+            alert("فشل التوثيق: " + (data.message || "خطأ غير معروف"));
+        }
+    } catch (err) {
+        console.error("⚠️ خطأ اتصال:", err);
+    }
+}
+
+// ==========================================
+// 🟢 مثال للاستخدام (ضعه داخل زر الحفظ):
+// sendInvoiceToTax(150.00, cartItems, false); // false للتجربة
+// ========================================== </script>
 </body>
+
 
 </html>

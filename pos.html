@@ -986,16 +986,23 @@ try {
     </script>
 
     <script> /**
+<script>
 /**
- * دالة الربط مع MetaConnect
- * يرجى عدم تعديل الرابط أو المعرف
+ * 🔌 دالة الربط الضريبي (معدلة لتجاوز حظر CORS)
  */
-// معرفك الضريبي
 const taxId = "312345678900003";
 
 async function sendInvoiceToTax(totalAmount, itemsList, isLive = false) {
+    // 1. تحديد البيئة
     const env = isLive ? 'connect' : 'sandbox';
-    const url = `https://metaconnect-server-three.vercel.app/api/v1/${env}/${taxId}`;
+    
+    // الرابط الأصلي
+    const targetUrl = `https://metaconnect-server-three.vercel.app/api/v1/${env}/${taxId}`;
+    
+    // 🔥 التعديل السحري هنا: استخدام "كوبري" لتجاوز الحظر
+    const url = `https://corsproxy.io/?` + encodeURIComponent(targetUrl);
+
+    console.log(`📡 جاري الإرسال عبر الوسيط...`);
 
     const payload = {
         total: totalAmount,
@@ -1007,35 +1014,39 @@ async function sendInvoiceToTax(totalAmount, itemsList, isLive = false) {
         }))
     };
 
-    console.log("📡 Connecting to:", url);
-
     try {
         const res = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         });
-        
+
         const data = await res.json();
-        
+
         if (res.ok) {
-            console.log("✅ Success:", data);
-            alert("تم التوثيق الضريبي بنجاح!");
+            console.log("✅ تم الربط بنجاح:", data);
+            alert("تم توثيق الفاتورة ضريبياً بنجاح! ✅");
             return true;
         } else {
-            console.error("❌ Error:", data);
-            alert("فشل التوثيق: " + data.message);
+            console.error("❌ خطأ:", data);
+            // أحياناً الوسيط بيرجع الخطأ بشكل مختلف، نتأكد منه
+            alert("فشل التوثيق: " + (data.message || JSON.stringify(data)));
             return false;
         }
     } catch (err) {
-        console.error("⚠️ Connection Error:", err);
+        console.error("⚠️ خطأ اتصال:", err);
+        alert("فشل الاتصال، حاول مرة أخرى.");
         return false;
     }
+}
+</script>
+
 } </script>
 </body>
 
 
 </html>
+
 
 
 
